@@ -43,6 +43,7 @@ body {
     background: #bbada0;
     border-radius: 10px;
     padding: 10px;
+    position: relative; /* Add position relative for absolute positioning */
 }
 
 .tile {
@@ -67,3 +68,13 @@ body {
 .tile-512 { background: #edc850; color: #f9f6f2; }
 .tile-1024 { background: #edc53f; color: #f9f6f2; }
 .tile-2048 { background: #edc22e; color: #f9f6f2; }
+
+/* Styling for the game over text */
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #ff0000;
+}
