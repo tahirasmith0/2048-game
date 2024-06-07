@@ -127,10 +127,10 @@ function resetGame() {
     updateScore();
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const newGameButton = document.querySelector('button');
+    newGameButton.addEventListener('click', resetGame);
+});
+
 // Initialize the game
 initBoard();
-
-    addTile();
-    addTile();
-    drawBoard();
-});
