@@ -54,26 +54,29 @@ function updateScore() {
 
 function handleKeyPress(event) {
     if (gameOver) return;
+    let boardChanged = false;
     switch (event.key) {
         case 'ArrowUp':
-            move('up');
+            boardChanged = move('up');
             break;
         case 'ArrowDown':
-            move('down');
+            boardChanged = move('down');
             break;
         case 'ArrowLeft':
-            move('left');
+            boardChanged = move('left');
             break;
         case 'ArrowRight':
-            move('right');
+            boardChanged = move('right');
             break;
         case ' ':
             resetGame();
-            break;
+            return;
     }
-    addTile();
-    updateBoardView();
-    updateScore();
+    if (boardChanged) {
+        addTile();
+        updateBoardView();
+        updateScore();
+    }
     if (!movesAvailable()) {
         gameOver = true;
         displayGameOver();
@@ -81,12 +84,11 @@ function handleKeyPress(event) {
 }
 
 function movesAvailable() {
-    // Check if there are any empty cells or adjacent cells with the same value
     for (let row = 0; row < 4; row++) {
         for (let col = 0; col < 4; col++) {
-            if (board[row][col] === 0) return true; // Empty cell found
-            if (row < 3 && board[row][col] === board[row + 1][col]) return true; // Same value below
-            if (col < 3 && board[row][col] === board[row][col + 1]) return true; // Same value to the right
+            if (board[row][col] === 0) return true;
+            if (row < 3 && board[row][col] === board[row + 1][col]) return true;
+            if (col < 3 && board[row][col] === board[row][col + 1]) return true;
         }
     }
     return false;
@@ -101,30 +103,50 @@ function displayGameOver() {
 }
 
 function move(direction) {
+    let boardChanged = false;
     switch (direction) {
         case 'up':
             for (let col = 0; col < 4; col++) {
-                let compressed = compressColumn(board.map(row => row[col]));
-                for (let row = 0; row < 4; row++) board[row][col] = compressed[row];
+                const originalColumn = board.map(row => row[col]);
+                const compressedColumn = compressColumn(originalColumn);
+                for (let row = 0; row < 4; row++) {
+                    if (board[row][col] !== compressedColumn[row]) boardChanged = true;
+                    board[row][col] = compressedColumn[row];
+                }
             }
             break;
         case 'down':
             for (let col = 0; col < 4; col++) {
-                let compressed = compressColumn(board.map(row => row[col]).reverse()).reverse();
-                for (let row = 0; row < 4; row++) board[row][col] = compressed[row];
+                const originalColumn = board.map(row => row[col]);
+                const compressedColumn = compressColumn(originalColumn.reverse()).reverse();
+                for (let row = 0; row < 4; row++) {
+                    if (board[row][col] !== compressedColumn[row]) boardChanged = true;
+                    board[row][col] = compressedColumn[row];
+                }
             }
             break;
         case 'left':
             for (let row = 0; row < 4; row++) {
-                board[row] = compressRow(board[row]);
+                const originalRow = board[row];
+                const compressedRow = compressRow(originalRow);
+                for (let col = 0; col < 4; col++) {
+                    if (board[row][col] !== compressedRow[col]) boardChanged = true;
+                    board[row][col] = compressedRow[col];
+                }
             }
             break;
         case 'right':
             for (let row = 0; row < 4; row++) {
-                board[row] = compressRow(board[row].reverse()).reverse();
+                const originalRow = board[row];
+                const compressedRow = compressRow(originalRow.reverse()).reverse();
+                for (let col = 0; col < 4; col++) {
+                    if (board[row][col] !== compressedRow[col]) boardChanged = true;
+                    board[row][col] = compressedRow[col];
+                }
             }
             break;
     }
+    return boardChanged;
 }
 
 function compressRow(row) {
@@ -134,17 +156,16 @@ function compressRow(row) {
         if (row[i] !== 0) {
             let currentValue = row[i];
             if (!merged && i + 1 < row.length && row[i + 1] === currentValue) {
-                // Merge adjacent tiles if they have the same value
                 result.push(currentValue * 2);
                 score += currentValue * 2;
                 merged = true;
+                i++; // Skip the next tile
             } else {
                 result.push(currentValue);
                 merged = false;
             }
         }
     }
-    // Fill the rest of the row with zeros
     while (result.length < 4) {
         result.push(0);
     }
@@ -158,17 +179,16 @@ function compressColumn(col) {
         if (col[i] !== 0) {
             let currentValue = col[i];
             if (!merged && i + 1 < col.length && col[i + 1] === currentValue) {
-                // Merge adjacent tiles if they have the same value
                 result.push(currentValue * 2);
                 score += currentValue * 2;
                 merged = true;
+                i++; // Skip the next tile
             } else {
                 result.push(currentValue);
                 merged = false;
             }
         }
     }
-    // Fill the rest of the column with zeros
     while (result.length < 4) {
         result.push(0);
     }
