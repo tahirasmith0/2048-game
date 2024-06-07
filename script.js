@@ -102,8 +102,53 @@ function displayGameOver() {
 
 function move(direction) {
     switch (direction) {
-        // Implement move logic as before
+        case 'up':
+            for (let col = 0; col < 4; col++) {
+                let compressed = compressColumn(board.map(row => row[col]));
+                for (let row = 0; row < 4; row++) board[row][col] = compressed[row];
+            }
+            break;
+        case 'down':
+            for (let col = 0; col < 4; col++) {
+                let compressed = compressColumn(board.map(row => row[col]).reverse()).reverse();
+                for (let row = 0; row < 4; row++) board[row][col] = compressed[row];
+            }
+            break;
+        case 'left':
+            for (let row = 0; row < 4; row++) {
+                board[row] = compressRow(board[row]);
+            }
+            break;
+        case 'right':
+            for (let row = 0; row < 4; row++) {
+                board[row] = compressRow(board[row].reverse()).reverse();
+            }
+            break;
     }
+}
+
+function compressRow(row) {
+    row = row.filter(val => val !== 0);
+    for (let i = 0; i < row.length - 1; i++) {
+        if (row[i] === row[i + 1]) {
+            row[i] *= 2;
+            score += row[i];
+            row[i + 1] = 0;
+        }
+    }
+    return row.filter(val => val !== 0).concat(Array(4 - row.filter(val => val !== 0).length).fill(0));
+}
+
+function compressColumn(col) {
+    col = col.filter(val => val !== 0);
+    for (let i = 0; i < col.length - 1; i++) {
+        if (col[i] === col[i + 1]) {
+            col[i] *= 2;
+            score += col[i];
+            col[i + 1] = 0;
+        }
+    }
+    return col.filter(val => val !== 0).concat(Array(4 - col.filter(val => val !== 0).length).fill(0));
 }
 
 function resetGame() {
