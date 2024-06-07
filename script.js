@@ -5,15 +5,15 @@ let highScore = localStorage.getItem('2048HighScore') || 0;
 document.getElementById('current-score').innerText = `Score: ${score}`;
 document.getElementById('highest-score').innerText = `High Score: ${highScore}`;
 
-// Update function for the board setup and initialization
 function initBoard() {
     board = Array.from({ length: 4 }, () => Array(4).fill(0));
-    // Rest of the initialization logic...
+    // Add initial tiles and update board
+    updateBoardView();
+    updateScore();
 }
 
-// Update function for adding tiles
 function addTile() {
-    // Your existing logic for adding a tile
+    // Your logic for adding a new tile
     updateScore();
 }
 
@@ -26,22 +26,40 @@ function updateScore() {
     }
 }
 
-// Update function for the game logic
 function moveAndMerge(direction) {
-    // Your existing logic for moving and merging tiles
-    // Update the score whenever you merge tiles
-    // Example:
-    // score += mergedTileValue;
+    // Your logic for moving and merging tiles
+    let merged = false;
+    // Example merge logic
+    for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+            if (board[row][col] > 0) {
+                score += board[row][col];
+                merged = true;
+            }
+        }
+    }
+
+    if (merged) {
+        addTile();
+    }
 
     updateScore();
 }
 
-// Call this function when you need to reset the game
-function resetGame() {
-    score = 0;
-    initBoard();
-    updateScore();
+function updateBoardView() {
+    // Your logic for updating the board view
+    for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+            const tile = document.getElementById(`tile-${row}-${col}`);
+            if (tile) {
+                tile.style.transform = `translate(${col * 110}px, ${row * 110}px)`;
+            }
+        }
+    }
 }
+
+// Initialize the game
+initBoard();
 
     addTile();
     addTile();
