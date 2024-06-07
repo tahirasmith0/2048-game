@@ -128,27 +128,51 @@ function move(direction) {
 }
 
 function compressRow(row) {
-    row = row.filter(val => val !== 0);
-    for (let i = 0; i < row.length - 1; i++) {
-        if (row[i] === row[i + 1]) {
-            row[i] *= 2;
-            score += row[i];
-            row[i + 1] = 0;
+    let result = [];
+    let merged = false;
+    for (let i = 0; i < row.length; i++) {
+        if (row[i] !== 0) {
+            let currentValue = row[i];
+            if (!merged && i + 1 < row.length && row[i + 1] === currentValue) {
+                // Merge adjacent tiles if they have the same value
+                result.push(currentValue * 2);
+                score += currentValue * 2;
+                merged = true;
+            } else {
+                result.push(currentValue);
+                merged = false;
+            }
         }
     }
-    return row.filter(val => val !== 0).concat(Array(4 - row.filter(val => val !== 0).length).fill(0));
+    // Fill the rest of the row with zeros
+    while (result.length < 4) {
+        result.push(0);
+    }
+    return result;
 }
 
 function compressColumn(col) {
-    col = col.filter(val => val !== 0);
-    for (let i = 0; i < col.length - 1; i++) {
-        if (col[i] === col[i + 1]) {
-            col[i] *= 2;
-            score += col[i];
-            col[i + 1] = 0;
+    let result = [];
+    let merged = false;
+    for (let i = 0; i < col.length; i++) {
+        if (col[i] !== 0) {
+            let currentValue = col[i];
+            if (!merged && i + 1 < col.length && col[i + 1] === currentValue) {
+                // Merge adjacent tiles if they have the same value
+                result.push(currentValue * 2);
+                score += currentValue * 2;
+                merged = true;
+            } else {
+                result.push(currentValue);
+                merged = false;
+            }
         }
     }
-    return col.filter(val => val !== 0).concat(Array(4 - col.filter(val => val !== 0).length).fill(0));
+    // Fill the rest of the column with zeros
+    while (result.length < 4) {
+        result.push(0);
+    }
+    return result;
 }
 
 function resetGame() {
