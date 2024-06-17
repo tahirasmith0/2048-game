@@ -104,104 +104,71 @@ function displayGameOver() {
 
 function move(direction) {
     let boardChanged = false;
+    let originalBoard = JSON.parse(JSON.stringify(board));
+
     switch (direction) {
         case 'up':
             for (let col = 0; col < 4; col++) {
-                const originalColumn = board.map(row => row[col]);
-                const compressedColumn = compressColumn(originalColumn);
+                let compressedColumn = compress(board.map(row => row[col]));
                 for (let row = 0; row < 4; row++) {
-                    if (board[row][col] !== compressedColumn[row]) boardChanged = true;
                     board[row][col] = compressedColumn[row];
                 }
             }
             break;
         case 'down':
             for (let col = 0; col < 4; col++) {
-                const originalColumn = board.map(row => row[col]);
-                const compressedColumn = compressColumn(originalColumn.reverse()).reverse();
+                let compressedColumn = compress(board.map(row => row[col]).reverse()).reverse();
                 for (let row = 0; row < 4; row++) {
-                    if (board[row][col] !== compressedColumn[row]) boardChanged = true;
                     board[row][col] = compressedColumn[row];
                 }
             }
             break;
         case 'left':
             for (let row = 0; row < 4; row++) {
-                const originalRow = board[row];
-                const compressedRow = compressRow(originalRow);
-                for (let col = 0; col < 4; col++) {
-                    if (board[row][col] !== compressedRow[col]) boardChanged = true;
-                    board[row][col] = compressedRow[col];
-                }
+                let compressedRow = compress(board[row]);
+                board[row] = compressedRow;
             }
             break;
         case 'right':
             for (let row = 0; row < 4; row++) {
-                const originalRow = board[row];
-                const compressedRow = compressRow(originalRow.reverse()).reverse();
-                for (let col = 0; col < 4; col++) {
-                    if (board[row][col] !== compressedRow[col]) boardChanged = true;
-                    board[row][col] = compressedRow[col];
-                }
+                let compressedRow = compress(board[row].reverse()).reverse();
+                board[row] = compressedRow;
             }
             break;
     }
+
+    boardChanged = !boardsEqual(originalBoard, board);
     return boardChanged;
 }
 
-function compressRow(row) {
-    let result = [];
-    let merged = false;
-    for (let i = 0; i < row.length; i++) {
-        if (row[i] !== 0) {
-            let currentValue = row[i];
-            if (!merged && i + 1 < row.length && row[i + 1] === currentValue) {
-                result.push(currentValue * 2);
-                score += currentValue * 2;
-                merged = true;
-                i++; // Skip the next tile
-            } else {
-                result.push(currentValue);
-                merged = false;
-            }
+function compress(line) {
+    let newLine = line.filter(val => val !== 0);
+    for (let i = 0; i < newLine.length - 1; i++) {
+        if (newLine[i] === newLine[i + 1]) {
+            newLine[i] *= 2;
+            score += newLine[i];
+            newLine[i + 1] = 0;
         }
     }
-    while (result.length < 4) {
-        result.push(0);
+    newLine = newLine.filter(val => val !== 0);
+    while (newLine.length < 4) {
+        newLine.push(0);
     }
-    return result;
+    return newLine;
 }
 
-function compressColumn(col) {
-    let result = [];
-    let merged = false;
-    for (let i = 0; i < col.length; i++) {
-        if (col[i] !== 0) {
-            let currentValue = col[i];
-            if (!merged && i + 1 < col.length && col[i + 1] === currentValue) {
-                result.push(currentValue * 2);
-                score += currentValue * 2;
-                merged = true;
-                i++; // Skip the next tile
-            } else {
-                result.push(currentValue);
-                merged = false;
-            }
+function boardsEqual(board1, board2) {
+    for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+            if (board1[row][col] !== board2[row][col]) return false;
         }
     }
-    while (result.length < 4) {
-        result.push(0);
-    }
-    return result;
+    return true;
 }
 
 function resetGame() {
     score = 0;
     initBoard();
-    updateScore();
-    const gameOverText = document.querySelector('.game-over');
-    if (gameOverText) gameOverText.remove();
 }
 
-// Initialize the game
-initBoard();
+window.onload = initBoard;
