@@ -7,14 +7,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <h1>2048 Game</h1>
-        <div class="scores">
-            <div id="current-score">Score: 0</div>
-            <div id="highest-score">High Score: 0</div>
-        </div>
+    <div id="score-container">
+        <div id="current-score">Score: 0</div>
+        <div id="highest-score">High Score: 0</div>
     </div>
-    <div id="game-board"></div>
+    <div id="game-board" class="game-board"></div>
     <button onclick="resetGame()">New Game</button>
     <script src="script.js"></script>
 </body>
