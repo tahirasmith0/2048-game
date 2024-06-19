@@ -1,127 +1,37 @@
 body {
     font-family: Arial, sans-serif;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    background-color: #faf8ef;
+    height: 100vh;
     margin: 0;
-    padding: 20px;
+    background-color: #faf8ef;
 }
 
-#score-container {
-    display: flex;
-    justify-content: space-between;
-    width: 260px;
-    margin-bottom: 20px;
+#container {
+    text-align: center;
 }
 
-#current-score, #highest-score {
-    font-size: 24px;
+#board {
+    display: grid;
+    grid-template-columns: repeat(4, 110px); /* Adjusted size */
+    grid-template-rows: repeat(4, 110px);    /* Adjusted size */
+    gap: 10px;
+    background-color: #bbada0;
     padding: 10px;
     border-radius: 5px;
-    background-color: #bbada0;
-    color: #ffffff;
+    margin: 20px auto;
 }
 
-#game-board {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.tile {
-    width: 60px;
-    height: 60px;
+.cell {
+    width: 110px; /* Adjusted size */
+    height: 110px; /* Adjusted size */
+    background-color: #cdc1b4;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 24px;
-    border-radius: 5px;
-}
-
-.tile-0 {
-    background-color: #cdc1b4;
-}
-
-.tile-2 {
-    background-color: #eee4da;
+    border-radius: 8px; /* More square look */
     color: #776e65;
-}
-
-.tile-4 {
-    background-color: #ede0c8;
-    color: #776e65;
-}
-
-.tile-8 {
-    background-color: #f2b179;
-    color: #f9f6f2;
-}
-
-.tile-16 {
-    background-color: #f59563;
-    color: #f9f6f2;
-}
-
-.tile-32 {
-    background-color: #f67c5f;
-    color: #f9f6f2;
-}
-
-.tile-64 {
-    background-color: #f65e3b;
-    color: #f9f6f2;
-}
-
-.tile-128 {
-    background-color: #edcf72;
-    color: #f9f6f2;
-}
-
-.tile-256 {
-    background-color: #edcc61;
-    color: #f9f6f2;
-}
-
-.tile-512 {
-    background-color: #edc850;
-    color: #f9f6f2;
-}
-
-.tile-1024 {
-    background-color: #edc53f;
-    color: #f9f6f2;
-}
-
-.tile-2048 {
-    background-color: #edc22e;
-    color: #f9f6f2;
-}
-
-button {
-    font-size: 18px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #8f7a66;
-    color: #f9f6f2;
-    cursor: pointer;
-    margin-top: 10px; /* Adjust this value to move the button down */
-}
-
-button:hover {
-    background-color: #9f8a76;
-}
-
-.game-over {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(238, 228, 218, 0.7);
-    padding: 20px;
-    font-size: 24px;
-    border-radius: 5px;
-    text-align: center;
+    font-weight: bold;
 }
