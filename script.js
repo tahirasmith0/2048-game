@@ -143,33 +143,3 @@ function checkGameOver() {
 
 function updateScore() {
     document.getElementById('score').innerText = `Score: ${score}`;
-}
-
-function handleKeyPress(event) {
-    switch (event.key) {
-        case 'ArrowUp':
-            move('up');
-            break;
-        case 'ArrowDown':
-            move('down');
-            break;
-        case 'ArrowLeft':
-            move('left');
-            break;
-        case 'ArrowRight':
-            move('right');
-            break;
-    }
-}
-
-// Initialize the game
-document.addEventListener('DOMContentLoaded', () => {
-    initializeBoard();
-    document.addEventListener('keydown', handleKeyPress);
-});
-
-function resetGame() {
-    initializeBoard();
-    score = 0;
-    updateScore();
-}
