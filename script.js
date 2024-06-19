@@ -54,26 +54,29 @@ function updateScore() {
 
 function handleKeyPress(event) {
     if (gameOver) return;
+    let boardChanged = false;
     switch (event.key) {
         case 'ArrowUp':
-            move('up');
+            boardChanged = move('up');
             break;
         case 'ArrowDown':
-            move('down');
+            boardChanged = move('down');
             break;
         case 'ArrowLeft':
-            move('left');
+            boardChanged = move('left');
             break;
         case 'ArrowRight':
-            move('right');
+            boardChanged = move('right');
             break;
         case ' ':
             resetGame();
-            break;
+            return;
     }
-    addTile();
-    updateBoardView();
-    updateScore();
+    if (boardChanged) {
+        addTile();
+        updateBoardView();
+        updateScore();
+    }
     if (!movesAvailable()) {
         gameOver = true;
         displayGameOver();
@@ -81,12 +84,11 @@ function handleKeyPress(event) {
 }
 
 function movesAvailable() {
-    // Check if there are any empty cells or adjacent cells with the same value
     for (let row = 0; row < 4; row++) {
         for (let col = 0; col < 4; col++) {
-            if (board[row][col] === 0) return true; // Empty cell found
-            if (row < 3 && board[row][col] === board[row + 1][col]) return true; // Same value below
-            if (col < 3 && board[row][col] === board[row][col + 1]) return true; // Same value to the right
+            if (board[row][col] === 0) return true;
+            if (row < 3 && board[row][col] === board[row + 1][col]) return true;
+            if (col < 3 && board[row][col] === board[row][col + 1]) return true;
         }
     }
     return false;
@@ -101,18 +103,72 @@ function displayGameOver() {
 }
 
 function move(direction) {
+    let boardChanged = false;
+    let originalBoard = JSON.parse(JSON.stringify(board));
+
     switch (direction) {
-        // Implement move logic as before
+        case 'up':
+            for (let col = 0; col < 4; col++) {
+                let compressedColumn = compress(board.map(row => row[col]));
+                for (let row = 0; row < 4; row++) {
+                    board[row][col] = compressedColumn[row];
+                }
+            }
+            break;
+        case 'down':
+            for (let col = 0; col < 4; col++) {
+                let compressedColumn = compress(board.map(row => row[col]).reverse()).reverse();
+                for (let row = 0; row < 4; row++) {
+                    board[row][col] = compressedColumn[row];
+                }
+            }
+            break;
+        case 'left':
+            for (let row = 0; row < 4; row++) {
+                let compressedRow = compress(board[row]);
+                board[row] = compressedRow;
+            }
+            break;
+        case 'right':
+            for (let row = 0; row < 4; row++) {
+                let compressedRow = compress(board[row].reverse()).reverse();
+                board[row] = compressedRow;
+            }
+            break;
     }
+
+    boardChanged = !boardsEqual(originalBoard, board);
+    return boardChanged;
+}
+
+function compress(line) {
+    let newLine = line.filter(val => val !== 0);
+    for (let i = 0; i < newLine.length - 1; i++) {
+        if (newLine[i] === newLine[i + 1]) {
+            newLine[i] *= 2;
+            score += newLine[i];
+            newLine[i + 1] = 0;
+        }
+    }
+    newLine = newLine.filter(val => val !== 0);
+    while (newLine.length < 4) {
+        newLine.push(0);
+    }
+    return newLine;
+}
+
+function boardsEqual(board1, board2) {
+    for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+            if (board1[row][col] !== board2[row][col]) return false;
+        }
+    }
+    return true;
 }
 
 function resetGame() {
     score = 0;
     initBoard();
-    updateScore();
-    const gameOverText = document.querySelector('.game-over');
-    if (gameOverText) gameOverText.remove();
 }
 
-// Initialize the game
-initBoard();
+window.onload = initBoard;
