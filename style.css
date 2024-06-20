@@ -10,8 +10,8 @@ body {
 
 #game-board {
     display: grid;
-    grid-template-columns: repeat(4, 110px);
-    grid-template-rows: repeat(4, 110px);
+    grid-template-columns: repeat(4, 623px);
+    grid-template-rows: repeat(4, 623px);
     gap: 10px;
     justify-content: center;
     margin: 20px auto;
