@@ -37,12 +37,7 @@ function updateBoardView() {
         for (let col = 0; col < 4; col++) {
             const tile = document.createElement('div');
             tile.className = `tile tile-${board[row][col]}`;
-            if (board[row][col] !== 0) {
-                const img = document.createElement('img');
-                img.src = `images/${board[row][col]}.png`;
-                img.alt = board[row][col];
-                tile.appendChild(img);
-            }
+            tile.innerText = board[row][col] === 0 ? '' : board[row][col];
             gameBoard.appendChild(tile);
         }
     }
@@ -73,6 +68,9 @@ function handleKeyPress(event) {
         case 'ArrowRight':
             boardChanged = move('right');
             break;
+        case ' ':
+            resetGame();
+            return;
     }
     if (boardChanged) {
         addTile();
@@ -99,7 +97,7 @@ function movesAvailable() {
 function displayGameOver() {
     const gameBoard = document.getElementById('game-board');
     const gameOverText = document.createElement('div');
-    gameOverText.innerText = 'Game Over!';
+    gameOverText.innerText = 'Game Over! Press Space to Restart';
     gameOverText.classList.add('game-over');
     gameBoard.appendChild(gameOverText);
 }
