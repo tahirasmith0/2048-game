@@ -41,9 +41,6 @@ function updateBoardView() {
                 const img = document.createElement('img');
                 img.src = `images/${board[row][col]}.png`;
                 img.alt = board[row][col];
-                img.onerror = function() {
-                    this.src = '';  // Clear the image src if it fails to load
-                };
                 tile.appendChild(img);
             }
             gameBoard.appendChild(tile);
