@@ -3,6 +3,20 @@ let score = 0;
 let highScore = localStorage.getItem('2048HighScore') || 0;
 let gameOver = false;
 
+const tileImages = {
+    2: 'images/2.png',
+    4: 'images/4.png',
+    8: 'images/8.png',
+    16: 'images/16.png',
+    32: 'images/32.png',
+    64: 'images/64.png',
+    128: 'images/128.png',
+    256: 'images/256.png',
+    512: 'images/512.png',
+    1024: 'images/1024.png',
+    2048: 'images/2048.png'
+};
+
 document.getElementById('current-score').innerText = `Score: ${score}`;
 document.getElementById('highest-score').innerText = `High Score: ${highScore}`;
 
@@ -39,8 +53,8 @@ function updateBoardView() {
             tile.className = `tile tile-${board[row][col]}`;
             if (board[row][col] !== 0) {
                 const img = document.createElement('img');
-                img.src = `images/${board[row][col]}.png`;
-                img.alt = board[row][col];
+                img.src = tileImages[board[row][col]];
+                img.alt = board[row][col]; // Add alt text for accessibility
                 tile.appendChild(img);
             }
             gameBoard.appendChild(tile);
@@ -99,7 +113,7 @@ function movesAvailable() {
 function displayGameOver() {
     const gameBoard = document.getElementById('game-board');
     const gameOverText = document.createElement('div');
-    gameOverText.innerText = 'Game Over!';
+    gameOverText.innerText = 'Game Over! Press New Game to Restart';
     gameOverText.classList.add('game-over');
     gameBoard.appendChild(gameOverText);
 }
